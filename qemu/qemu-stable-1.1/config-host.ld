@@ -1,0 +1,1 @@
+SEARCH_DIR("/usr/i686-linux-gnu/lib32"); SEARCH_DIR("=/usr/local/lib32"); SEARCH_DIR("=/lib32"); SEARCH_DIR("=/usr/lib32"); SEARCH_DIR("=/usr/local/lib/i386-linux-gnu"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib/i386-linux-gnu"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib/i386-linux-gnu"); SEARCH_DIR("=/usr/lib");
