@@ -26,7 +26,9 @@ ENV PATH "$PATH:/tools"
 COPY qemu /qemu
 
 # Install tools needed to build Qemu
-RUN apt-get install -y gcc python pkg-config build-essential libglib2.0-dev --no-install-recommends
+RUN set -ex \
+  && apt-get update \
+  && apt-get install -y gcc python pkg-config build-essential libglib2.0-dev --no-install-recommends
 
 # Build Qemu
 RUN set -ex \
