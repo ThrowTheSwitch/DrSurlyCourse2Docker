@@ -4,11 +4,12 @@ MAINTAINER Michael Karlesky <michael@karlesky.net>
 
 
 # Update Ubuntu package management environment
-# Nano is just a convenient text editor
+# Nano is just a convenient text editor for use within the container
+# Unzip and Curl are used to grab course materials from source repositories
 RUN set -ex \
   && apt-get update \
   && apt-get -y upgrade \
-  && apt-get install -y nano --no-install-recommends
+  && apt-get install -y nano unzip curl --no-install-recommends
 
 
 ##
@@ -40,6 +41,11 @@ RUN set -ex \
 # Copy built Qemu into tools directory
 RUN mv /qemu/qemu-stable-1.1/arm-softmmu/qemu-system-arm /tools
 
+# Package up supporting assets
+COPY assets/zap /tools
+RUN chmod +x /tools/zap
+
+
 # Cleanup
 RUN set -ex \
   # Remove Qemu source directory
@@ -60,14 +66,8 @@ RUN set -ex \
   && apt-get install -y ruby --no-install-recommends \
   # Prevent documentation installation taking up space
   && echo "gem: --no-ri --no-rdoc" > ~/.gemrc \
-  # Get Ceedling, Unity, CMock
-  && gem install ceedling \
-  && cd /tmp \
-  # Extract and move tools
-  && ceedling new project \
-  && mv project/vendor/ceedling /tools \
-  && cd / \
-  && rm -rf /tmp/*
+  # Get Ceedling
+  && gem install ceedling
 
 ##
 ## Cleanup
@@ -100,8 +100,8 @@ RUN set -ex \
   && rm /usr/bin/arm-none-eabi-strings \
   && rm /usr/bin/arm-none-eabi-strip
 
-# Connect to our external code project
-VOLUME ["/surly"]
+
+RUN mkdir /lab
 
 # When the container launches, drop into a shell
 ENTRYPOINT ["/bin/bash"]
