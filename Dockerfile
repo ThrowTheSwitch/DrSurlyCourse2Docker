@@ -63,11 +63,18 @@ RUN apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libglib2.0-0 --
 
 # Install Ruby & Ceedling, CMock, Unity
 RUN set -ex \
-  && apt-get install -y ruby --no-install-recommends \
+  # Install apt-add-repository command
+  && apt-get update \
+  && apt-get install -y software-properties-common --no-install-recommends  \
+  && apt-add-repository -y ppa:brightbox/ruby-ng \
+  && apt-get update \
+  && apt-get install -y ruby2.4 --no-install-recommends \
+  && apt-get purge -y --auto-remove software-properties-common \
   # Prevent documentation installation taking up space
   && echo "gem: --no-ri --no-rdoc" > ~/.gemrc \
-  # Get Ceedling
-  && gem install ceedling
+  # Get Ceedling & ensure it's latest version
+  && gem install ceedling \
+  && gem update ceedling
 
 ##
 ## Cleanup
