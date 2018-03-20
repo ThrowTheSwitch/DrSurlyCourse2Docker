@@ -99,10 +99,7 @@ RUN set -ex \
   && rm /usr/bin/arm-none-eabi-gcc-ranlib \
   && rm /usr/bin/arm-none-eabi-gcov \
   && rm /usr/bin/arm-none-eabi-gprof \
-  && rm /usr/bin/arm-none-eabi-objcopy \
-  && rm /usr/bin/arm-none-eabi-objdump \
   && rm /usr/bin/arm-none-eabi-ranlib \
-  && rm /usr/bin/arm-none-eabi-readelf \
   && rm /usr/bin/arm-none-eabi-size \
   && rm /usr/bin/arm-none-eabi-strings \
   && rm /usr/bin/arm-none-eabi-strip
