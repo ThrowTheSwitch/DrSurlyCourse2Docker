@@ -5,26 +5,23 @@ MAINTAINER Michael Karlesky <michael@karlesky.net>
 
 # Update Ubuntu package management environment
 # Nano is just a convenient text editor for use within the container
-# Unzip and Curl are used to grab course materials from source repositories
+# Unzip is unarchives course materials
 RUN set -ex \
   && apt-get update \
   && apt-get -y upgrade \
-  && apt-get install -y nano unzip curl --no-install-recommends
+  && apt-get install -y nano unzip --no-install-recommends
 
 
 ##
-## Environemnt set up
+## Grab all our assets pulled into image
 ##
-
-RUN mkdir /tools
-ENV PATH "$PATH:/tools"
+  
+COPY assets/qemu assets/qemu
 
 
 ##
 ## Custom Qemu for ARM emulation
 ##
-
-COPY qemu /qemu
 
 # Install tools needed to build Qemu
 RUN set -ex \
@@ -33,23 +30,19 @@ RUN set -ex \
 
 # Build Qemu
 RUN set -ex \
-  && cd /qemu/qemu-stable-1.1 \
+  && cd /assets/qemu/qemu-stable-1.1 \
   && ./configure --target-list=arm-softmmu --disable-docs --disable-pie --disable-usb-redir --disable-guest-base --disable-slirp --disable-nptl --disable-blobs --audio-drv-list="" --audio-card-list="" --disable-linux-aio --disable-curl --disable-curses --disable-zlib-test \
   && make \
   && cd /
   
 # Copy built Qemu into tools directory
-RUN mv /qemu/qemu-stable-1.1/arm-softmmu/qemu-system-arm /tools
-
-# Package up supporting assets
-COPY assets/zap /tools
-RUN chmod +x /tools/zap
+RUN mv /assets/qemu/qemu-stable-1.1/arm-softmmu/qemu-system-arm /usr/local/bin
 
 
 # Cleanup
 RUN set -ex \
   # Remove Qemu source directory
-  && rm -rf /qemu \
+  && rm -rf /assets \
   # Remove packages needed to build Qemu
   && apt-get purge -y --auto-remove gcc python pkg-config build-essential libglib2.0-dev
   
@@ -69,12 +62,7 @@ RUN set -ex \
   && apt-add-repository -y ppa:brightbox/ruby-ng \
   && apt-get update \
   && apt-get install -y ruby2.4 --no-install-recommends \
-  && apt-get purge -y --auto-remove software-properties-common \
-  # Prevent documentation installation taking up space
-  && echo "gem: --no-ri --no-rdoc" > ~/.gemrc \
-  # Get Ceedling & ensure it's latest version
-  && gem install ceedling \
-  && gem update ceedling
+  && apt-get purge -y --auto-remove software-properties-common
 
 ##
 ## Cleanup
@@ -103,9 +91,6 @@ RUN set -ex \
   && rm /usr/bin/arm-none-eabi-size \
   && rm /usr/bin/arm-none-eabi-strings \
   && rm /usr/bin/arm-none-eabi-strip
-
-
-RUN mkdir /lab
 
 # When the container launches, drop into a shell
 ENTRYPOINT ["/bin/bash"]

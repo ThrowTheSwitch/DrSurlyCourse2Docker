@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# If no command line parameters given, provide usage banner
+if [ $# -eq 0 ]
+  then
+    cat <<-____HERE    
+Usage: setup
+   setup  Extract project to file system
+   ...    Future utility options TBD
+
+____HERE
+    exit
+fi
+
+
+if [ "$1" != "setup" ]; then
+  echo "Unrecognized parameter. Run with no parameters for help."
+  exit
+fi
+
+
+# Extract archive listing and regex to determine base directory of files
+basedir=`unzip -l /home/drsurly/awesomesauce2.zip | grep -E -o 'mvandervoord[^/]+' | head -1`
+
+# Extract the archive
+echo "Extracting project"
+unzip -q /home/drsurly/awesomesauce2.zip -d /tmp
+
+# Delete any git junk -- first files and then directories
+find /tmp -type f -iname ".git*" -delete
+find /tmp -type d -name ".git" -exec rm -rf "{}" \;
+
+# Move extracted contents below $basedir to new base directory of /lab
+mv /tmp/$basedir/* /lab
+
+# Clean up /tmp
+rm -rf /tmp/*
+
+echo "Done"
+echo "See project contents in /lab"
