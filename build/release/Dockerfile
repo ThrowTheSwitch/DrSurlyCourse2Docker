@@ -1,4 +1,4 @@
-FROM throwtheswitch/drsurly-course2-base
+FROM throwtheswitch/drsurly-course2-base:0.9.0
 
 MAINTAINER Michael Karlesky <michael@karlesky.net>
 
