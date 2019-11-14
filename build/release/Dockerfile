@@ -1,12 +1,7 @@
-FROM throwtheswitch/drsurly-course2-base:0.9.0
+FROM throwtheswitch/drsurly-course2-base:1.0.0
 
 MAINTAINER Michael Karlesky <michael@karlesky.net>
 
-
-# Update Ubuntu package management environment
-# RUN set -ex \
-#   && apt-get update \
-#   && apt-get -y upgrade
 
 ##
 ## Copy assets for inclusion in image
@@ -33,3 +28,5 @@ RUN set -ex \
 RUN mkdir /lab
 
 # ENTRYPOINT set in base image
+
+WORKDIR /lab

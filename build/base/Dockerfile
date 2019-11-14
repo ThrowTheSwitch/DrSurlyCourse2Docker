@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.5
+FROM ubuntu:18.04
 
 MAINTAINER Michael Karlesky <michael@karlesky.net>
 
@@ -48,13 +48,13 @@ RUN set -ex \
   
 
 ##
-## Development environemnt: compiler toolchain & build tools
+## Development environemnt: compiler toolchain & supporting tools
 ##
 
 # Install packages needed for ARM-based cross-compiling
 RUN apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libglib2.0-0 --no-install-recommends
 
-# Install Ruby & Ceedling, CMock, Unity
+# Install Ruby
 RUN set -ex \
   # Install apt-add-repository command
   && apt-get update \
@@ -74,23 +74,7 @@ RUN set -ex \
   && apt-get autoclean all \
   && rm -rf /var/lib/apt/lists/* \
   # Unneeded Debconf templates
-  && rm /var/cache/debconf/* \
-  # Thin out arm-none-eabi install, removing tools we don't need
-  && rm /usr/bin/arm-none-eabi-addr2line \
-  && rm /usr/bin/arm-none-eabi-ar \
-  && rm /usr/bin/arm-none-eabi-c++ \
-  && rm /usr/bin/arm-none-eabi-c++filt \
-  && rm /usr/bin/arm-none-eabi-cpp \
-  && rm /usr/bin/arm-none-eabi-elfedit \
-  && rm /usr/bin/arm-none-eabi-gcc-ar \
-  && rm /usr/bin/arm-none-eabi-gcc-nm \
-  && rm /usr/bin/arm-none-eabi-gcc-ranlib \
-  && rm /usr/bin/arm-none-eabi-gcov \
-  && rm /usr/bin/arm-none-eabi-gprof \
-  && rm /usr/bin/arm-none-eabi-ranlib \
-  && rm /usr/bin/arm-none-eabi-size \
-  && rm /usr/bin/arm-none-eabi-strings \
-  && rm /usr/bin/arm-none-eabi-strip
+  && rm /var/cache/debconf/*
 
 # When the container launches, drop into a shell
 ENTRYPOINT ["/bin/bash"]
