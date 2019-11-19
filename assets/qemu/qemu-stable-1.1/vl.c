@@ -2040,7 +2040,7 @@ static int virtcon_parse(const char *devname)
         qemu_opt_set(bus_opts, "driver", "virtio-serial-s390");
     } else {
         qemu_opt_set(bus_opts, "driver", "virtio-serial-pci");
-    } 
+    }
 
     dev_opts = qemu_opts_create(device, NULL, 0);
     qemu_opt_set(dev_opts, "driver", "virtconsole");
@@ -2059,7 +2059,7 @@ static int virtcon_parse(const char *devname)
 }
 
 static int debugcon_parse(const char *devname)
-{   
+{
     QemuOpts *opts;
 
     if (!qemu_chr_new("debugcon", devname, NULL)) {
@@ -2241,6 +2241,7 @@ static const QEMUOption *lookup_opt(int argc, char **argv,
     return popt;
 }
 
+/* removed to avoid glibc problems
 static gpointer malloc_and_trace(gsize n_bytes)
 {
     void *ptr = malloc(n_bytes);
@@ -2260,6 +2261,7 @@ static void free_and_trace(gpointer mem)
     trace_g_free(mem);
     free(mem);
 }
+*/
 
 int qemu_init_main_loop(void)
 {
@@ -2294,18 +2296,22 @@ int main(int argc, char **argv, char **envp)
     bool userconfig = true;
     const char *log_mask = NULL;
     const char *log_file = NULL;
+    /* removed to avoid glibc problems
     GMemVTable mem_trace = {
         .malloc = malloc_and_trace,
         .realloc = realloc_and_trace,
         .free = free_and_trace,
     };
+    */
     const char *trace_events = NULL;
     const char *trace_file = NULL;
 
     atexit(qemu_run_exit_notifiers);
     error_set_progname(argv[0]);
 
+    /* removed to avoid glibc problems
     g_mem_set_vtable(&mem_trace);
+    */
     if (!g_thread_supported()) {
 #if !GLIB_CHECK_VERSION(2, 31, 0)
         g_thread_init(NULL);
@@ -3076,8 +3082,8 @@ int main(int argc, char **argv, char **envp)
 			}
 			p += 8;
 			os_set_proc_name(p);
-		     }	
-		 }	
+		     }
+		 }
                 break;
             case QEMU_OPTION_prom_env:
                 if (nb_prom_envs >= MAX_PROM_ENVS) {
