@@ -1,40 +1,61 @@
 #!/bin/bash
 
+TMP="/tmp/project"
+PROJECT_HOME="/lab"
+
 # If no command line parameters given, provide usage banner
 if [ $# -eq 0 ]
   then
     cat <<-____HERE    
 Usage: setup
-   setup  Extract project to file system
+   setup  Extract project to $PROJECT_HOME
    ...    Future utility options TBD
 
 ____HERE
     exit
 fi
 
-
+# Parameter check
 if [ "$1" != "setup" ]; then
   echo "Unrecognized parameter. Run with no parameters for help."
   exit
 fi
 
+# Clear temporary directory just to be sure
+rm -rf "$TMP"
+
+# Check if expansion target directory has anything in it
+if [ "$(ls -A $PROJECT_HOME)" ]; then
+  # Confirm deletion of contents of project folder
+  read -p "> $PROJECT_HOME is not empty (includes hidden files). Delete contents before extracting project [y/n]? " -n 1 -r
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    echo "> Clearing $PROJECT_HOME ..."
+    rm -rf "$PROJECT_HOME"/*
+  else
+    echo "> Project extraction cancelled."
+    exit
+  fi
+fi
 
 # Extract archive listing and regex to determine base directory of files
-basedir=`unzip -l /home/drsurly/awesomesauce2.zip | grep -E -o 'mvandervoord[^/]+' | head -1`
+BASEDIR=`unzip -l /home/drsurly/awesomesauce2.zip | grep -E -o 'mvandervoord[^/]+' | head -1`
 
 # Extract the archive
-echo "Extracting project"
-unzip -q /home/drsurly/awesomesauce2.zip -d /tmp
+echo "> Extracting project..."
+unzip -q /home/drsurly/awesomesauce2.zip -d $TMP
 
 # Delete any git junk -- first files and then directories
-find /tmp -type f -iname ".git*" -delete
-find /tmp -type d -name ".git" -exec rm -rf "{}" \;
+find $TMP -type f -iname ".git*" -delete
+find $TMP -type d -name ".git" -exec rm -rf "{}" \;
 
 # Move extracted contents below $basedir to new base directory of /lab
-mv /tmp/$basedir/* /lab
+mv "$TMP/$BASEDIR"/* "$PROJECT_HOME"
 
-# Clean up /tmp
-rm -rf /tmp/*
+chmod +x "$PROJECT_HOME"/start_lab
 
-echo "Done"
-echo "See project contents in /lab"
+# Clean up temporary directory
+rm -rf "$TMP"
+
+echo "> Done."
+echo "> See project contents in $PROJECT_HOME"
