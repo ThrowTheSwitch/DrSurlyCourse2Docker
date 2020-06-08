@@ -23,7 +23,7 @@ COPY assets/qemu assets/qemu
 ## Custom Qemu for ARM emulation
 ##
 
-# Install tools needed to build Qemu
+# Install tools needed to build Qemu and needed by course mini-projects (e.g. DIY mocking material)
 RUN set -ex \
   && apt-get update \
   && apt-get install -y gcc python pkg-config build-essential libglib2.0-dev --no-install-recommends
@@ -43,8 +43,8 @@ RUN mv /assets/qemu/qemu-stable-1.1/arm-softmmu/qemu-system-arm /usr/local/bin
 RUN set -ex \
   # Remove Qemu source directory
   && rm -rf /assets \
-  # Remove packages needed to build Qemu
-  && apt-get purge -y --auto-remove gcc python pkg-config build-essential libglib2.0-dev
+  # Remove packages not needed in the final course environment
+  && apt-get purge -y --auto-remove python pkg-config libglib2.0-dev
   
 
 ##
@@ -52,7 +52,9 @@ RUN set -ex \
 ##
 
 # Install packages needed for ARM-based cross-compiling
-RUN apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libglib2.0-0 --no-install-recommends
+RUN set -ex \
+  && apt-get update \
+  && apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libglib2.0-0 --no-install-recommends
 
 # Install Ruby
 RUN set -ex \

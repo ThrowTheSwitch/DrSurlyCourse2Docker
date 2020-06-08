@@ -3,12 +3,14 @@ Unit testing environment with ARM cross compiler, Unity, CMock, Ceedling, and Qe
 
 ## Contents
 * Testing tools
-  * Ceedling 0.29.1
-  * CMock 2.5.1
-  * Unity 2.5.0
+  * Ceedling 0.30.0
+  * CMock 2.5.2
+  * Unity 2.5.1
 * Environment
-  * arm-none-eabi-gcc 6.3.1
   * Ruby 2.4.9
+  * make 4.1
+  * gcc 7.4.0
+  * arm-none-eabi-gcc 6.3.1
   * QEMU 1.1.2 (modified)
 * Course project
 
