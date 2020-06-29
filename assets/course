@@ -2,6 +2,7 @@
 
 TMP="/tmp/project"
 PROJECT_HOME="/lab"
+PROJECT_ARCHIVE="awesomesauce2.zip"
 
 # If no command line parameters given, provide usage banner
 if [ $# -eq 0 ]
@@ -39,11 +40,11 @@ if [ "$(ls -A $PROJECT_HOME)" ]; then
 fi
 
 # Extract archive listing and regex to determine base directory of files
-BASEDIR=`unzip -l /home/drsurly/awesomesauce2.zip | grep -E -o 'mvandervoord[^/]+' | head -1`
+BASEDIR=`unzip -l /home/drsurly/$PROJECT_ARCHIVE | grep -E -o 'mvandervoord[^/]+' | head -1`
 
 # Extract the archive
 echo "> Extracting project..."
-unzip -q /home/drsurly/awesomesauce2.zip -d $TMP
+unzip -q "/home/drsurly/$PROJECT_ARCHIVE" -d $TMP
 
 # Delete any git junk -- first files and then directories
 find $TMP -type f -iname ".git*" -delete
